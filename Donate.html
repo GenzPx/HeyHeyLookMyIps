@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ACCESS PANEL - Genz Support</title>
+  <meta name="description" content="Enter to support Genz. Access panel for restricted area." />
+  <link rel="icon" href="https://emojiapi.dev/api/v1/smiling_face_with_horns/64.png" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+    :root {
+      --bg: #0a0a0a;
+      --green: #00ff90;
+      --red: #ff0033;
+      --gray: #999;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 2rem;
+      overflow: hidden;
+    }
+
+    .terminal {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 2rem;
+      border: 1px solid var(--green);
+      width: 100%;
+      max-width: 600px;
+      text-shadow: 0 0 5px var(--green);
+      animation: flicker 1.5s infinite alternate;
+    }
+
+    h1 {
+      color: var(--green);
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      margin: 0.5rem 0;
+      color: var(--gray);
+    }
+
+    .warning {
+      color: var(--red);
+      margin: 1rem 0;
+    }
+
+    .btn-access {
+      background: none;
+      border: 1px solid var(--green);
+      color: var(--green);
+      padding: 0.7rem 1.5rem;
+      cursor: pointer;
+      margin-top: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .btn-access:hover {
+      background: var(--green);
+      color: #000;
+      box-shadow: 0 0 10px var(--green);
+    }
+
+    .note {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    @keyframes flicker {
+      0% { opacity: 0.98; text-shadow: 0 0 2px var(--green); }
+      100% { opacity: 1; text-shadow: 0 0 10px var(--green); }
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal">
+    <h1>> ACCESS PANEL : GENZ NODE</h1>
+    <p>Welcome, agent.</p>
+    <p>You're entering a restricted zone.</p>
+    <p class="warning">Unauthorized access will be... appreciated.</p>
+
+    <a href="https://trakteer.id/genzsenpai/tip" target="_blank">
+      <button class="btn-access">I ACCEPT THE RISK</button>
+    </a>
+
+    <div class="note">
+      ⚠️ This is not illegal, it's just a display. Thank you.
+    </div>
+  </div>
+
+  <script>
+    console.log("Loading GENZ_NODE...");
+    console.log("Access granted. Awaiting payment 💰");
+  </script>
+</body>
+</html>

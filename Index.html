@@ -1,0 +1,235 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Free IP & device tracker with map, export, and dark mode." />
+  <meta property="og:title" content="HeyLooksMyIp!" />
+  <meta property="og:description" content="Track your IP, location, and device info in one click." />
+  <meta property="og:type" content="website" />
+  <title>HeyLooksMyIp! - Advanced Tracker</title>
+  <style>
+    :root {
+      --primary: #00bfa6;
+      --bg: #f9f9fb;
+      --text: #1a1a1a;
+      --muted: #666;
+      --card: #fff;
+      --radius: 12px;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    [data-theme="dark"] {
+      --bg: #121212;
+      --text: #f1f1f1;
+      --muted: #aaa;
+      --card: #1e1e1e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    header {
+      padding: 30px 20px;
+      text-align: center;
+      background-color: var(--primary);
+      color: white;
+    }
+    header h1 { margin: 0; font-size: 2rem; }
+    .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 25px;
+      box-shadow: var(--shadow);
+      margin-bottom: 30px;
+    }
+    .card h2 { margin-top: 0; font-size: 1.2rem; color: var(--primary); }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #eee;
+      padding: 10px 0;
+    }
+    .info-label { color: var(--muted); }
+    .copy-btn, .download-btn {
+      margin-left: 10px;
+      cursor: pointer;
+      color: var(--primary);
+      font-size: 0.8rem;
+    }
+    #map {
+      height: 400px;
+      width: 100%;
+      border-radius: var(--radius);
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    .toggle-theme {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      cursor: pointer;
+    }
+    .cta-buttons {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .cta-buttons a {
+      margin: 0 10px;
+      padding: 10px 18px;
+      background: var(--primary);
+      color: white;
+      border-radius: var(--radius);
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: var(--shadow);
+      transition: background 0.3s;
+    }
+    .cta-buttons a:hover {
+      background: #019e8c;
+    }
+  </style>
+</head>
+<body>
+  <div class="toggle-theme">🌓</div>
+  <header>
+    <h1>HeyLooksMyIp!</h1>
+    <p>Advanced IP, device & location viewer with map, export & more.</p>
+  </header>
+  <main class="container">
+    <div class="cta-buttons">
+      <a href="genzX77/About.html">About Site</a>
+      <a href="genzX77/Creator.html">Creator</a>
+      <a href="/donate">Donate</a>
+    </div>
+    <div class="card">
+      <h2>Your Network Information <span class="download-btn" onclick="downloadJSON()">📥 Export JSON</span></h2>
+      <div class="info-row"><span class="info-label">IP Address:</span> <span id="ip">...</span></div>
+      <div class="info-row"><span class="info-label">IP Version:</span> <span id="version">...</span></div>
+      <div class="info-row"><span class="info-label">Hostname:</span> <span id="hostname">...</span></div>
+      <div class="info-row"><span class="info-label">City:</span> <span id="city">...</span></div>
+      <div class="info-row"><span class="info-label">Region:</span> <span id="region">...</span></div>
+      <div class="info-row"><span class="info-label">Country:</span> <span id="country">...</span></div>
+      <div class="info-row"><span class="info-label">Coordinates:</span> <span id="coords">...</span></div>
+      <div class="info-row"><span class="info-label">Timezone:</span> <span id="timezone">...</span></div>
+      <div class="info-row"><span class="info-label">ISP:</span> <span id="isp">...</span></div>
+      <div class="info-row"><span class="info-label">ASN:</span> <span id="asn">...</span></div>
+      <div class="info-row"><span class="info-label">Google Maps:</span> <span id="gmaps">...</span></div>
+    </div>
+    <div class="card">
+      <h2>Your Device Info</h2>
+      <div class="info-row"><span class="info-label">Browser:</span> <span id="browser">...</span></div>
+      <div class="info-row"><span class="info-label">Operating System:</span> <span id="os">...</span></div>
+      <div class="info-row"><span class="info-label">Connection Type:</span> <span id="connection">...</span></div>
+      <div class="info-row"><span class="info-label">Language:</span> <span id="language">...</span></div>
+      <div class="info-row"><span class="info-label">User Agent:</span> <span id="useragent">...</span></div>
+    </div>
+    <div class="card">
+      <input id="manualIP" placeholder="Enter IP..." type="text" />
+      <button onclick="fetchCustomIP()">Check</button>
+      <h2>Your Location on Map</h2>
+      <iframe id="map" loading="lazy"></iframe>
+    </div>
+  </main>
+  <footer>
+    &copy; 2025 HeyLooksMyIp!.<br />
+    Original work by <strong>@Genz</strong> · Powered by ipwhois.io
+  </footer>  <script>
+    async function fetchIPInfo() {
+      const res = await fetch('https://ipwho.is/');
+      const data = await res.json();
+      if (!data.success) {
+        document.getElementById('ip').textContent = 'Unable to fetch';
+        return;
+      }
+
+      document.getElementById('ip').textContent = data.ip;
+      document.getElementById('version').textContent = data.ip_type || 'Unknown';
+      document.getElementById('hostname').textContent = data.connection?.domain || 'N/A';
+      document.getElementById('city').textContent = data.city;
+      document.getElementById('region').textContent = data.region;
+      document.getElementById('country').textContent = data.country;
+      document.getElementById('coords').textContent = `${data.latitude}, ${data.longitude}`;
+      document.getElementById('timezone').textContent = data.timezone?.id || 'N/A';
+      document.getElementById('isp').textContent = data.connection?.isp || 'N/A';
+      document.getElementById('asn').textContent = data.connection?.asn || 'N/A';
+
+      const mapsLink = `https://www.google.com/maps?q=${data.latitude},${data.longitude}`;
+      document.getElementById('gmaps').innerHTML = `<a href="${mapsLink}" target="_blank">Open Map</a>`;
+      document.getElementById('map').src = mapsLink + '&output=embed';
+
+      saveToHistory(data.ip);
+      window.currentData = data;
+    }
+
+    function saveToHistory(ip) {
+      const history = JSON.parse(localStorage.getItem("ipHistory") || "[]");
+      if (!history.includes(ip)) {
+        history.unshift(ip);
+        localStorage.setItem("ipHistory", JSON.stringify(history.slice(0, 10)));
+      }
+    }
+
+    async function fetchCustomIP() {
+      const ip = document.getElementById("manualIP").value.trim();
+      if (!ip) return alert("Please enter IP.");
+      const res = await fetch('https://ipwho.is/' + ip);
+      const data = await res.json();
+      if (!data.success) return alert("Invalid IP");
+      window.currentData = data;
+      fetchIPInfo();
+    }
+
+    function detectDeviceInfo() {
+      const ua = navigator.userAgent;
+      const lang = navigator.language;
+      const conn = navigator.connection?.effectiveType || 'Unknown';
+
+      let browser = 'Unknown', os = 'Unknown';
+      if (/Chrome/.test(ua)) browser = 'Chrome';
+      else if (/Firefox/.test(ua)) browser = 'Firefox';
+      else if (/Safari/.test(ua)) browser = 'Safari';
+      else if (/Edge/.test(ua)) browser = 'Edge';
+
+      if (/Windows/.test(ua)) os = 'Windows';
+      else if (/Mac/.test(ua)) os = 'macOS';
+      else if (/Linux/.test(ua)) os = 'Linux';
+      else if (/Android/.test(ua)) os = 'Android';
+      else if (/iPhone|iPad/.test(ua)) os = 'iOS';
+
+      document.getElementById('browser').textContent = browser;
+      document.getElementById('os').textContent = os;
+      document.getElementById('language').textContent = lang;
+      document.getElementById('useragent').textContent = ua;
+      document.getElementById('connection').textContent = conn;
+    }
+
+    function downloadJSON() {
+      const blob = new Blob([JSON.stringify(window.currentData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'ip-info.json';
+      link.click();
+    }
+
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    document.documentElement.setAttribute("data-theme", prefersDark ? "dark" : "light");
+
+    document.querySelector(".toggle-theme").onclick = () => {
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      document.documentElement.setAttribute("data-theme", isDark ? "light" : "dark");
+    };
+
+    fetchIPInfo();
+    detectDeviceInfo();
+    setInterval(fetchIPInfo, 60000);
+  </script></body>
+</html>
